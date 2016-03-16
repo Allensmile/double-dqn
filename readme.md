@@ -83,7 +83,7 @@ We trained Double DQN for a total of 46 hours (7600 episodes, 95 epochs, 4791K f
 
 #### Score:
 
-![Breakout episode-score](http://musyoku.github.io/images/post/2016-03-16/breakout_episode_reward.png)
+![Breakout episode-score](http://musyoku.github.io/images/post/2016-03-16/breakout_episode_reward_comparison.png)
 
 #### Highscore:
 
