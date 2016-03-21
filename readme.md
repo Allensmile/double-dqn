@@ -94,3 +94,32 @@ We trained Double DQN for a total of 46 hours (7600 episodes, 95 epochs, 4791K f
 #### Average score:
 
 ![Breakout episode-average](http://musyoku.github.io/images/post/2016-03-16/breakout_evaluation_episode_reward.png)
+
+## Atari Pong
+
+![Pong](http://musyoku.github.io/images/post/2016-03-06/pong_result.gif)
+
+### Preprocessing
+
+![frame-0](http://musyoku.github.io/images/post/2016-03-06/pong_state0.png)
+![frame-1](http://musyoku.github.io/images/post/2016-03-06/pong_state1.png)
+![frame-2](http://musyoku.github.io/images/post/2016-03-06/pong_state2.png)
+![frame-3](http://musyoku.github.io/images/post/2016-03-06/pong_state3.png)
+
+### Training
+
+We trained Double DQN for a total of 55 hours (1500 episodes, 99 epochs, 4964K frames).
+
+#### Score:
+
+![Pong episode-score](http://musyoku.github.io/images/post/2016-03-16/pong_episode_reward_comparison.png)
+
+#### Highscore:
+
+![Pong episode-highscore](http://musyoku.github.io/images/post/2016-03-16/pong_training_episode_highscore.png)
+
+### Evaluation
+
+#### Average score:
+
+![Pong episode-average](http://musyoku.github.io/images/post/2016-03-16/breakout_evaluation_episode_reward.png)
