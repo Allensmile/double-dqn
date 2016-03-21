@@ -122,4 +122,4 @@ We trained Double DQN for a total of 55 hours (1500 episodes, 99 epochs, 4964K f
 
 #### Average score:
 
-![Pong episode-average](http://musyoku.github.io/images/post/2016-03-16/breakout_evaluation_episode_reward.png)
+![Pong episode-average](http://musyoku.github.io/images/post/2016-03-16/pong_evaluation_episode_reward.png)
