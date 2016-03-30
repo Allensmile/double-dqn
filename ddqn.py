@@ -32,13 +32,20 @@ class ConvolutionalNetwork(chainer.Chain):
 			chain.append(f(u))
 
 		if self.projection_type == "fully_connection":
-			chain.append(self.projection_layer(chain[-1]))
+			u = self.projection_layer(chain[-1])
+			if self.apply_batchnorm:
+				u = self.projection_batchnorm(u, test=test)
+			chain.append(f(u))
 
 		elif self.projection_type == "global_average_pooling":
 			batch_size = chain[-1].data.shape[0]
 			n_maps = chain[-1].data[0].shape[0]
 			chain.append(F.average_pooling_2d(chain[-1], self.top_filter_size))
 			chain.append(F.reshape(chain[-1], (batch_size, n_maps)))
+			u = self.projection_layer(chain[-1])
+			if self.apply_batchnorm:
+				u = self.projection_batchnorm(u, test=test)
+			chain.append(f(u))
 
 		else:
 			raise NotImplementedError()
@@ -102,14 +109,9 @@ class DDQN:
 		## See http://docs.chainer.org/en/stable/reference/optimizers.html
 		self.optimizer_conv = optimizers.Adam(alpha=config.rl_learning_rate, beta1=config.rl_gradient_momentum)
 		self.optimizer_conv.setup(self.conv)
-		## To avoid memory allocation error
-		## おまじない
-		self.optimizer_conv.zero_grads()
 		if self.fcl_eliminated is False:
 			self.optimizer_fc = optimizers.Adam(alpha=config.rl_learning_rate, beta1=config.rl_gradient_momentum)
 			self.optimizer_fc.setup(self.fc)
-			## おまじない
-			self.optimizer_fc.zero_grads()
 
 		# Replay Memory
 		## (state, action, reward, next_state, episode_ends)
@@ -295,12 +297,12 @@ class DDQN:
 		filename = "conv.model"
 		if os.path.isfile(filename):
 			serializers.load_hdf5(filename, self.conv)
-			print "Loaded convolutional network."
+			print "convolutional network loaded."
 		if self.fcl_eliminated is False:
 			filename = "fc.model"
 			if os.path.isfile(filename):
 				serializers.load_hdf5(filename, self.fc)
-				print "Loaded fully-connected network."
+				print "fully-connected network loaded."
 
 	def save(self):
 		serializers.save_hdf5("conv.model", self.conv)
@@ -329,6 +331,11 @@ def build_q_network(config):
 
 	if config.q_conv_output_projection_type == "fully_connection":
 		conv_attributes["projection_layer"] = L.Linear(output_map_width * output_map_height * config.q_conv_hidden_channels[-1], config.q_conv_output_vector_dimension, wscale=wscale)
+		conv_attributes["projection_batchnorm"] = L.BatchNormalization(config.q_conv_output_vector_dimension)
+
+	elif config.q_conv_output_projection_type == "global_average_pooling":
+		conv_attributes["projection_layer"] = L.Linear(config.q_conv_hidden_channels[-1], config.q_conv_output_vector_dimension, wscale=wscale)
+		conv_attributes["projection_batchnorm"] = L.BatchNormalization(config.q_conv_output_vector_dimension)
 
 	conv = ConvolutionalNetwork(**conv_attributes)
 	conv.n_hidden_layers = len(config.q_conv_hidden_channels)

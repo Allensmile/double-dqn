@@ -138,7 +138,8 @@ class Agent(RLGlueAgent):
 
 	def agent_step(self, reward, observation):
 		observed_screen = self.preprocess_screen(observation)
-		self.state = np.asanyarray([self.state[1], self.state[2], self.state[3], observed_screen], dtype=np.float32)
+		self.state = np.roll(self.state, 1, axis=0)
+		self.state[0] = observed_screen
 
 		########################### DEBUG ###############################
 		# if self.total_time_step % 500 == 0 and self.total_time_step != 0:

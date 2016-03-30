@@ -9,7 +9,6 @@ from config import config
 from agent import Agent
 
 # Override config
-config.apply_batchnorm = True
 config.ale_actions = [0, 3, 4]
 config.ale_screen_size = [210, 160]
 config.ale_scaled_screen_size = [84, 84]
